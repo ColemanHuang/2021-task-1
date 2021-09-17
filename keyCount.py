@@ -32,9 +32,25 @@ def first_level():
     return counts
 
 
+def second_level(counts):
+    print("switch num: {}".format(counts["switch"]))
+    count = []
+    cnt = 0
+    for word in words:
+        if word == "case":
+            cnt = cnt + 1
+        elif word == "default":
+            if cnt > 0:
+                count.append(cnt)
+            cnt = 0
+    print("case num: ", end="")
+    print(" ".join(str(x) for x in count))
+
+
 def main():
-    if sys.argv[2] == '1':
-        first_level()
+    counts = first_level()
+    if '2' <= sys.argv[2] <= '4':
+        second_level(counts)
 
 
 main()
