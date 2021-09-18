@@ -33,7 +33,11 @@ def first_level():
 
 
 def second_level(counts):
-    print("switch num: {}".format(counts["switch"]))
+    num = counts.get("switch", 0)
+    print("switch num: {}".format(num))
+    if num == 0:
+        print("case num: {}".format(num))
+        return
     count = []
     cnt = 0
     for word in words:
