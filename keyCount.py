@@ -71,14 +71,16 @@ def second_level(counts):
         print("case num: {}".format(num))
         return
     count = []
-    cnt = 0
+    flag = -1
     for word in words:
-        if word == "case":
-            cnt = cnt + 1
-        elif word == "default":
-            if cnt > 0:
-                count.append(cnt)
-            cnt = 0
+        if word == "switch":
+            count.append(0)
+            flag += 1
+        elif word == "case":
+            count[flag] += 1
+        else:
+            continue
+
     print("case num: ", end="")
     print(" ".join(str(x) for x in count))
 
@@ -115,4 +117,3 @@ def main():
 
 
 main()
-# print(words)
