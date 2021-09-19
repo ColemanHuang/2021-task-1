@@ -1,10 +1,14 @@
 import sys
+import re
 
 
 def get_text():
-    txt = open(sys.argv[1], "r").read()
-    for ch in '!"#$%&()*+,-./:;<=>?@[\\]^_{|}~':
+    file = open(sys.argv[1], "r", encoding="UTF-8")
+    txt = file.read()
+    for ch in '!#$%&()+,-.:;<=>?@[\\]^_{|}~':
         txt = txt.replace(ch, " ")
+    # 考虑注释不算在内，不能去掉符号 * /
+    file.close()
     return txt
 
 
@@ -14,20 +18,42 @@ keyWords = {"auto", "break", "case", "char", "const",
             "if", "int", "long", "register", "return",
             "short", "signed", "sizeof", "static", "struct",
             "switch", "typedef", "union", "unsigned",
-            "void", "volatile", "while"}
-
-codeTxt = get_text()
-words = codeTxt.split()
+            "void", "volatile", "while", "elseif"}
 
 
-def first_level():
+def words_filter():
+    txt = get_text().replace("else if", "elseif")
+    separator1 = r'//.*'
+    separator2 = r'\/\*(?:[^\*]|\*+[^\/\*])*\*+\/'
+    wordlist = re.split(separator1, txt)  # 去单行注释 //
+    word = ""
+    for i in wordlist:
+        word = word + i
+    # print(word)
+    wordlist = re.split(separator2, word)  # 去多行注释 /**/
+    word = ""
+    for i in wordlist:
+        word = word + i
+    # print(word)
+    wordlist = word.split()  # 分隔单词
+    # print(wordlist)
+    return wordlist
+
+
+words = words_filter()
+filterWords = []
+
+
+def first_level():  # 统计关键字个数
     counts = {}
     cnt = 0
     for word in words:
         if len(word) == 1 or (word not in keyWords):
             continue
         counts[word] = counts.get(word, 0) + 1
+        filterWords.append(word)
         cnt = cnt + 1
+    cnt = cnt + counts.get("elseif", 0)  # elseif 合并后要多算一次
     print("total num: {}".format(cnt))
     return counts
 
