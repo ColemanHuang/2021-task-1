@@ -24,25 +24,14 @@ keyWords = {"auto", "break", "case", "char", "const",
 
 def words_filter():
     txt = get_text().replace("else if", "elseif")
-    separator1 = r'//.*'
-    separator2 = r'\/\*(?:[^\*]|\*+[^\/\*])*\*+\/'
-    separator3 = r'".*"'
-    wordlist = re.split(separator1, txt)  # 去单行注释 //
-    word = ""
-    for i in wordlist:
-        word = word + i
-    # print(word)
-    wordlist = re.split(separator2, word)  # 去多行注释 /**/
-    word = ""
-    for i in wordlist:
-        word = word + i
-    # print(word)
-    wordlist = re.split(separator3, word)  # 去 ”...“ 之间的字符
-    word = ""
-    for i in wordlist:
-        word = word + i
-    wordlist = word.split()  # 分隔单词
-    # print(wordlist)
+    separator = [r'//.*', r'\/\*(?:[^\*]|\*+[^\/\*])*\*+\/', r'".*"']
+    # 分别去掉 //单行注释  /* 多行注释*/  "引号"
+    for sp in separator:
+        wordlist = re.split(sp, txt)
+        txt = ""
+        for word in wordlist:
+            txt = txt + word
+    wordlist = txt.split()
     return wordlist
 
 
