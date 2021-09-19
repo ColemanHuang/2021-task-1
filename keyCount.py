@@ -77,10 +77,35 @@ def second_level(counts):
     print(" ".join(str(x) for x in count))
 
 
+def last_level():
+    # print(filterWords)
+    stack = []
+    if_else_num = 0
+    if_elseif_else_num = 0
+    for word in filterWords:
+        if word == "if":
+            stack.append(word)
+        elif word == "elseif" and stack[-1] != "elseif":
+            stack.append(word)
+        elif word == "else":
+            if stack[-1] == "if":
+                stack.pop()
+                if_else_num += 1
+            elif stack[-1] == "elseif":
+                stack.pop()
+                stack.pop()
+                if_elseif_else_num += 1
+    print("if-else num: {}".format(if_else_num))
+    if sys.argv[2] == '4':
+        print("if-elseif-else num: {}".format(if_elseif_else_num))
+
+
 def main():
     counts = first_level()
     if '2' <= sys.argv[2] <= '4':
         second_level(counts)
+    if '3' <= sys.argv[2] <= '4':
+        last_level()
 
 
 main()
