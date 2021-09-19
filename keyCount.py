@@ -8,6 +8,7 @@ def get_text():
     for ch in '!#$%&()+,-.:;<=>?@[\\]^_{|}~':
         txt = txt.replace(ch, " ")
     # 考虑注释不算在内，不能去掉符号 * /
+    # 考虑 "..." 引号之间不作为关键字
     file.close()
     return txt
 
@@ -25,6 +26,7 @@ def words_filter():
     txt = get_text().replace("else if", "elseif")
     separator1 = r'//.*'
     separator2 = r'\/\*(?:[^\*]|\*+[^\/\*])*\*+\/'
+    separator3 = r'".*"'
     wordlist = re.split(separator1, txt)  # 去单行注释 //
     word = ""
     for i in wordlist:
@@ -35,6 +37,10 @@ def words_filter():
     for i in wordlist:
         word = word + i
     # print(word)
+    wordlist = re.split(separator3, word)  # 去 ”...“ 之间的字符
+    word = ""
+    for i in wordlist:
+        word = word + i
     wordlist = word.split()  # 分隔单词
     # print(wordlist)
     return wordlist
@@ -109,3 +115,4 @@ def main():
 
 
 main()
+# print(words)
