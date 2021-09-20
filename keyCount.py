@@ -6,20 +6,10 @@ def get_text():
     file = open(sys.argv[1], "r", encoding="UTF-8")
     txt = file.read()
     for ch in '!#$%&()+,-.:;<=>?@[\\]^_{|}~':
+        # 考虑注释和引号，不能去掉符号 * / “
         txt = txt.replace(ch, " ")
-    # 考虑注释不算在内，不能去掉符号 * /
-    # 考虑 "..." 引号之间不作为关键字
     file.close()
     return txt
-
-
-keyWords = {"auto", "break", "case", "char", "const",
-            "continue", "default", "do", "double", "else",
-            "enum", "extern", "float", "for", "goto",
-            "if", "int", "long", "register", "return",
-            "short", "signed", "sizeof", "static", "struct",
-            "switch", "typedef", "union", "unsigned",
-            "void", "volatile", "while", "elseif"}
 
 
 def words_filter():
@@ -39,11 +29,20 @@ words = words_filter()
 filterWords = []
 
 
-def first_level():  # 统计关键字个数
+def first_level():
+    # 统计关键字个数
+    keywords = {"auto", "break", "case", "char", "const",
+                "continue", "default", "do", "double", "else",
+                "enum", "extern", "float", "for", "goto",
+                "if", "int", "long", "register", "return",
+                "short", "signed", "sizeof", "static", "struct",
+                "switch", "typedef", "union", "unsigned",
+                "void", "volatile", "while", "elseif"
+                }
     counts = {}
     cnt = 0
     for word in words:
-        if len(word) == 1 or (word not in keyWords):
+        if len(word) == 1 or (word not in keywords):
             continue
         counts[word] = counts.get(word, 0) + 1
         filterWords.append(word)
@@ -69,13 +68,11 @@ def second_level(counts):
             count[flag] += 1
         else:
             continue
-
     print("case num: ", end="")
     print(" ".join(str(x) for x in count))
 
 
 def last_level():
-    # print(filterWords)
     stack = []
     if_else_num = 0
     if_elseif_else_num = 0
@@ -98,7 +95,8 @@ def last_level():
 
 
 def main():
-    counts = first_level()
+    if '1' <= sys.argv[2] <= '4':
+        counts = first_level()
     if '2' <= sys.argv[2] <= '4':
         second_level(counts)
     if '3' <= sys.argv[2] <= '4':
