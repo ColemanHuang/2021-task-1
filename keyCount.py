@@ -26,7 +26,7 @@ def words_filter():
 
 
 words = words_filter()
-filterWords = []
+filterwords = []
 
 
 def first_level():
@@ -45,7 +45,7 @@ def first_level():
         if len(word) == 1 or (word not in keywords):
             continue
         counts[word] = counts.get(word, 0) + 1
-        filterWords.append(word)
+        filterwords.append(word)
         cnt = cnt + 1
     cnt = cnt + counts.get("elseif", 0)  # elseif 合并后要多算一次
     print("total num: {}".format(cnt))
@@ -76,7 +76,7 @@ def last_level():
     stack = []
     if_else_num = 0
     if_elseif_else_num = 0
-    for word in filterWords:
+    for word in filterwords:
         if word == "if":
             stack.append(word)
         elif word == "elseif" and stack[-1] != "elseif":
